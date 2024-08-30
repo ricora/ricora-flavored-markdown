@@ -5,8 +5,8 @@
       "path": "."
     },
     {
-      "name": "remark-rfm",
-      "path": "packages/remark-rfm"
+      "name": "remark-preset-rfm",
+      "path": "packages/remark-preset-rfm"
     }
   ],
   "settings": {
