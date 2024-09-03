@@ -160,3 +160,276 @@ describe("remark-gfm", () => {
     expect(checkedCheckbox).toHaveProperty("disabled", true)
   })
 })
+
+describe("@r4ai/remark-embed", () => {
+  describe("transformerOEmbed", () => {
+    test("Correctly embed when oEmbed type is link", async () => {
+      const md = dedent`
+        https://oembed.example.com/link
+      `
+
+      const { html } = await process(md)
+      render(html)
+
+      const linkCard = screen.getByRole("link")
+      expect(linkCard).toHaveAttribute(
+        "href",
+        "https://oembed.example.com/link",
+      )
+      expect(linkCard).toHaveTextContent("https://oembed.example.com/link")
+      expect(linkCard).toHaveAttribute("class", "oembed oembed-link")
+    })
+
+    test("Correctly embed when oEmbed type is photo", async () => {
+      const md = dedent`
+        https://oembed.example.com/photo
+      `
+
+      const { html } = await process(md)
+      render(html)
+
+      const photo = screen.getByRole("img")
+      expect(photo).not.toHaveAttribute("href")
+      expect(photo).toHaveAttribute("src")
+      expect(photo).toHaveAttribute("width")
+      expect(photo).toHaveAttribute("height")
+      expect(photo).toHaveAttribute("class", "oembed oembed-photo")
+    })
+
+    test("Correctly embed when oEmbed type is video", async () => {
+      const md = dedent`
+        https://oembed.example.com/video
+      `
+
+      const { html } = await process(md)
+      render(html)
+
+      const video = document.querySelector(".oembed-video")
+      expect(video).not.toBeNull()
+      expect(video).not.toHaveAttribute("href")
+      expect(video).toHaveAttribute("class", "oembed oembed-video")
+      expect(video?.querySelector("object")).not.toBeNull()
+    })
+
+    test("Correctly embed when oEmbed type is rich", async () => {
+      const md = dedent`
+        https://oembed.example.com/rich
+      `
+
+      const { html } = await process(md)
+      render(html)
+
+      const rich = document.querySelector(".oembed-rich")
+      expect(rich).not.toBeNull()
+      expect(rich).not.toHaveAttribute("href")
+      expect(rich).toHaveAttribute("class", "oembed oembed-rich")
+      expect(rich?.querySelector("iframe")).not.toBeNull()
+    })
+  })
+
+  describe("transformerLinkCard", () => {
+    test("Correctly generate link card when Open Graph metadata is available", async () => {
+      const md = dedent`
+        https://open-graph.example.com
+      `
+
+      const { html } = await process(md)
+      render(html)
+
+      const root = document.querySelector(".link-card")
+      expect(root).not.toBeNull()
+      expect(root).toHaveAttribute("href", "https://open-graph.example.com/")
+      expect(root).toHaveAttribute("target", "_blank")
+      expect(root).toHaveAttribute("rel", "noopener noreferrer")
+
+      const container = root?.querySelector(".link-card__container")
+      expect(container).not.toBeNull()
+
+      const info = container?.querySelector(".link-card__info")
+      expect(info).not.toBeNull()
+
+      const title = info?.querySelector(".link-card__title")
+      expect(title).not.toBeNull()
+      expect(title).toHaveTextContent("Open Graph")
+
+      const description = info?.querySelector(".link-card__description")
+      expect(description).not.toBeNull()
+      expect(description).toHaveTextContent("An example of Open Graph")
+
+      const link = info?.querySelector(".link-card__link")
+      expect(link).not.toBeNull()
+
+      const favicon = link?.querySelector(".link-card__favicon")
+      expect(favicon).not.toBeNull()
+      expect(favicon).toHaveAttribute("src")
+      expect(favicon).toHaveAttribute(
+        "alt",
+        "Favicon for open-graph.example.com",
+      )
+      expect(favicon).toHaveAttribute("loading", "lazy")
+      expect(favicon).toHaveAttribute("decoding", "async")
+
+      const hostname = link?.querySelector(".link-card__hostname")
+      expect(hostname).not.toBeNull()
+      expect(hostname).toHaveTextContent("open-graph.example.com")
+
+      const image = container?.querySelector(".link-card__image img")
+      expect(image).not.toBeNull()
+      expect(image).toHaveAttribute("src")
+      expect(image).toHaveAttribute("loading", "lazy")
+      expect(image).toHaveAttribute("decoding", "async")
+    })
+
+    test("Correctly generate link card when Twitter Card metadata is available", async () => {
+      const md = dedent`
+        https://twitter-card.example.com
+      `
+
+      const { html } = await process(md)
+      render(html)
+
+      const root = document.querySelector(".link-card")
+      expect(root).not.toBeNull()
+      expect(root).toHaveAttribute("href", "https://twitter-card.example.com/")
+      expect(root).toHaveAttribute("target", "_blank")
+      expect(root).toHaveAttribute("rel", "noopener noreferrer")
+
+      const container = root?.querySelector(".link-card__container")
+      expect(container).not.toBeNull()
+
+      const info = container?.querySelector(".link-card__info")
+      expect(info).not.toBeNull()
+
+      const title = info?.querySelector(".link-card__title")
+      expect(title).not.toBeNull()
+      expect(title).toHaveTextContent("Twitter Card")
+
+      const description = info?.querySelector(".link-card__description")
+      expect(description).not.toBeNull()
+      expect(description).toHaveTextContent("An example of Twitter Card")
+
+      const link = info?.querySelector(".link-card__link")
+      expect(link).not.toBeNull()
+
+      const favicon = link?.querySelector(".link-card__favicon")
+      expect(favicon).not.toBeNull()
+      expect(favicon).toHaveAttribute("src")
+      expect(favicon).toHaveAttribute(
+        "alt",
+        "Favicon for twitter-card.example.com",
+      )
+      expect(favicon).toHaveAttribute("loading", "lazy")
+      expect(favicon).toHaveAttribute("decoding", "async")
+
+      const hostname = link?.querySelector(".link-card__hostname")
+      expect(hostname).not.toBeNull()
+      expect(hostname).toHaveTextContent("twitter-card.example.com")
+
+      const image = container?.querySelector(".link-card__image img")
+      expect(image).not.toBeNull()
+      expect(image).toHaveAttribute("src")
+      expect(image).toHaveAttribute("loading", "lazy")
+      expect(image).toHaveAttribute("decoding", "async")
+    })
+
+    test("Correctly generate link card when Open Graph and Twitter Card metadata are available", async () => {
+      const md = dedent`
+        https://open-graph.example.com/with-twitter-card
+      `
+
+      const { html } = await process(md)
+      render(html)
+
+      const root = document.querySelector(".link-card")
+      expect(root).not.toBeNull()
+      expect(root).toHaveAttribute(
+        "href",
+        "https://open-graph.example.com/with-twitter-card/",
+      )
+      expect(root).toHaveAttribute("target", "_blank")
+      expect(root).toHaveAttribute("rel", "noopener noreferrer")
+
+      const container = root?.querySelector(".link-card__container")
+      expect(container).not.toBeNull()
+
+      const info = container?.querySelector(".link-card__info")
+      expect(info).not.toBeNull()
+
+      const title = info?.querySelector(".link-card__title")
+      expect(title).not.toBeNull()
+      expect(title).toHaveTextContent("Open Graph")
+
+      const description = info?.querySelector(".link-card__description")
+      expect(description).not.toBeNull()
+      expect(description).toHaveTextContent("An example of Open Graph")
+
+      const link = info?.querySelector(".link-card__link")
+      expect(link).not.toBeNull()
+
+      const favicon = link?.querySelector(".link-card__favicon")
+      expect(favicon).not.toBeNull()
+      expect(favicon).toHaveAttribute("src")
+      expect(favicon).toHaveAttribute(
+        "alt",
+        "Favicon for open-graph.example.com",
+      )
+      expect(favicon).toHaveAttribute("loading", "lazy")
+      expect(favicon).toHaveAttribute("decoding", "async")
+
+      const hostname = link?.querySelector(".link-card__hostname")
+      expect(hostname).not.toBeNull()
+      expect(hostname).toHaveTextContent("open-graph.example.com")
+
+      const image = container?.querySelector(".link-card__image img")
+      expect(image).not.toBeNull()
+      expect(image).toHaveAttribute("src")
+      expect(image).toHaveAttribute("loading", "lazy")
+      expect(image).toHaveAttribute("decoding", "async")
+    })
+
+    test("Correctly generate link card when Open Graph and Twitter Card metadata are not available", async () => {
+      const md = dedent`
+        https://www.example.com
+      `
+
+      const { html } = await process(md)
+      render(html)
+
+      const root = document.querySelector(".link-card")
+      expect(root).not.toBeNull()
+      expect(root).toHaveAttribute("href", "https://www.example.com/")
+      expect(root).toHaveAttribute("target", "_blank")
+      expect(root).toHaveAttribute("rel", "noopener noreferrer")
+
+      const container = root?.querySelector(".link-card__container")
+      expect(container).not.toBeNull()
+
+      const info = container?.querySelector(".link-card__info")
+      expect(info).not.toBeNull()
+
+      const title = info?.querySelector(".link-card__title")
+      expect(title).not.toBeNull()
+      expect(title).toHaveTextContent("Example Domain")
+
+      const description = info?.querySelector(".link-card__description")
+      expect(description).toBeNull()
+
+      const link = info?.querySelector(".link-card__link")
+      expect(link).not.toBeNull()
+
+      const favicon = link?.querySelector(".link-card__favicon")
+      expect(favicon).not.toBeNull()
+      expect(favicon).toHaveAttribute("src")
+      expect(favicon).toHaveAttribute("alt", "Favicon for www.example.com")
+      expect(favicon).toHaveAttribute("loading", "lazy")
+      expect(favicon).toHaveAttribute("decoding", "async")
+
+      const hostname = link?.querySelector(".link-card__hostname")
+      expect(hostname).not.toBeNull()
+      expect(hostname).toHaveTextContent("www.example.com")
+
+      const image = container?.querySelector(".link-card__image img")
+      expect(image).toBeNull()
+    })
+  })
+})
