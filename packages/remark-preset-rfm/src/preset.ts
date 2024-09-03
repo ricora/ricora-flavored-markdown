@@ -7,7 +7,6 @@ import { defu } from "defu"
 import type { Options as GfmOptions } from "remark-gfm"
 import remarkGfm from "remark-gfm"
 import type { PluggableList, Preset } from "unified"
-import { html2hast } from "./utils.js"
 
 export type Options = {
   /**
