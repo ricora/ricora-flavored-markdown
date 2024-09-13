@@ -64,7 +64,7 @@
     "@types/bun": "1.1.9",
     "@types/hast": "3.0.4",
     "@types/mdast": "4.0.4",
-    "@vitest/coverage-v8": "2.0.5",
+    "@vitest/coverage-v8": "2.1.0",
     "dedent": "1.5.3",
     "happy-dom": "15.7.4",
     "msw": "2.4.5",
@@ -76,7 +76,7 @@
     "ts-essentials": "10.0.2",
     "typescript": "5.6.2",
     "unified": "11.0.5",
-    "vitest": "2.0.5"
+    "vitest": "2.1.0"
   },
   "packageManager": "bun@1.1.17"
 }
