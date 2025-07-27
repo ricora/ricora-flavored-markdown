@@ -58,7 +58,7 @@
     "remark-gfm": "4.0.1"
   },
   "devDependencies": {
-    "@testing-library/dom": "10.4.0",
+    "@testing-library/dom": "10.4.1",
     "@testing-library/jest-dom": "6.6.4",
     "@tsconfig/node16": "16.1.4",
     "@types/bun": "1.2.19",
