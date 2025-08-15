@@ -66,7 +66,7 @@
     "@types/mdast": "4.0.4",
     "@vitest/coverage-v8": "2.1.9",
     "dedent": "1.6.0",
-    "happy-dom": "15.11.7",
+    "happy-dom": "18.0.1",
     "msw": "2.10.5",
     "rehype-raw": "7.0.0",
     "rehype-stringify": "10.0.1",
