@@ -76,7 +76,7 @@
     "ts-essentials": "10.1.1",
     "typescript": "5.9.2",
     "unified": "11.0.5",
-    "vitest": "2.1.9"
+    "vitest": "4.1.11"
   },
   "packageManager": "bun@1.1.17"
 }
