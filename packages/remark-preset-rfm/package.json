@@ -53,7 +53,7 @@
   "peerDependencies": {},
   "dependencies": {
     "@r4ai/remark-embed": "0.3.1",
-    "defu": "6.1.4",
+    "defu": "6.1.5",
     "hast-util-from-html-isomorphic": "2.0.0",
     "remark-gfm": "4.0.1"
   },
