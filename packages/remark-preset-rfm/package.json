@@ -67,7 +67,7 @@
     "@vitest/coverage-v8": "2.1.9",
     "dedent": "1.7.2",
     "happy-dom": "15.11.7",
-    "msw": "2.10.5",
+    "msw": "2.15.0",
     "rehype-raw": "7.0.0",
     "rehype-stringify": "10.0.1",
     "remark-math": "6.0.0",
